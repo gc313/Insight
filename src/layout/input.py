@@ -1,5 +1,6 @@
 import streamlit as st
 import sqlite3
+import layout.chart as chart
 
 # 获取数据库连接
 def get_db_connection():
@@ -14,6 +15,23 @@ def fetch_table_data(table_name):
     conn.close()
     return rows
 
+# 显示数据筛选列表
+def data_filter_selectbox():
+    selected_option = st.selectbox("统计条件: ", ["学期", "单元", "课时", "题型", "知识点", "错误原因"], key="data_filter_selectbox", index=1)
+    if selected_option == "学期":
+        return chart.sort_data_by_semester()
+    elif selected_option == "单元":
+        return chart.sort_data_by_unit()
+    elif selected_option == "课时":
+        return chart.sort_data_by_lesson()
+    elif selected_option == "题型":
+        return chart.sort_data_by_question_type()
+    elif selected_option == "知识点":
+        return chart.sort_data_by_knowledge_point()
+    elif selected_option == "错误原因":
+        return chart.sort_data_by_error_reason()
+    
+    
 # 显示添加数据按钮
 def data_input_button():
     if st.button("添加数据"):

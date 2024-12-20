@@ -172,4 +172,4 @@ cython_debug/
 .pypirc
 
 # TestData
-data/
+data/insight_data.db

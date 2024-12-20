@@ -6,11 +6,8 @@ import pandas as pd
 def get_db_connection():
     return sqlite3.connect('./data/insight_data.db')
 
-def draw_chart():
-
-    data = sort_data_by_lesson()
+def draw_chart(data):
     data_frame = pd.DataFrame(data, columns=['name', 'error_count'])
-    # print(data_frame)
     
     chart_spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -86,6 +83,18 @@ def sort_data_by_lesson():
     data = cursor.fetchall()
     conn.close()
     return data
+
+def sort_data_by_question_type():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # 以错题数量最多的题目类型排序
+    cursor.execute("""
+        SELECT question_type.name, COUNT(err_insight.id) AS error_count 
+        FROM err_insight 
+        JOIN question_type ON err_insight.question_type_id = question_type.id 
+        GROUP BY question_type.name 
+        ORDER BY error_count DESC
+    """)
 
 def sort_data_by_knowledge_point():
     conn = get_db_connection()
