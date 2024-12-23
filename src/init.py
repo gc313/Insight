@@ -1,5 +1,6 @@
 import os
 import database as db
+import constants.db_constants as db_con
 
 # 定义表名和列名常量
 TABLES = {
@@ -38,7 +39,7 @@ TEST_DATA = {
 }
 
 def init_database():
-    data_dir = './data'
+    data_dir = db_con.DATABASE_PATH
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
         
