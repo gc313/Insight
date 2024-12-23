@@ -3,7 +3,7 @@ import constants.db_constants as db_con
 
 # 获取数据库连接
 def get_db_connection():
-    return sqlite3.connect('./data/insight_data.db')
+    return sqlite3.connect(db_con.DATABASE_PATH + '/' + db_con.DATABASE_NAME)
 
 def fetch_table_data(table_name):
     with get_db_connection() as conn:
@@ -17,10 +17,10 @@ def fetch_sorted_data(table_name, join_table, join_field, group_field):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         query = f"""
-            SELECT {join_table}.name, COUNT(err_insight.id) AS error_count 
-            FROM err_insight 
-            JOIN {join_table} ON err_insight.{join_field} = {join_table}.id 
-            GROUP BY {join_table}.name 
+            SELECT {join_table}.{group_field}, COUNT({db_con.TABLE_ERR_INSIGHT}.{db_con.COLUMN_ID}) AS error_count 
+            FROM {db_con.TABLE_ERR_INSIGHT} 
+            JOIN {join_table} ON {db_con.TABLE_ERR_INSIGHT}.{join_field} = {join_table}.{db_con.COLUMN_ID} 
+            GROUP BY {join_table}.{group_field} 
             ORDER BY error_count DESC
         """
         cursor.execute(query)
