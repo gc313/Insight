@@ -48,7 +48,6 @@ def draw_chart(data):
                         "field": "error_count",
                         "type": "quantitative",
                         "axis": {"title": "错误数", "orient": "left"},
-                        "offset": 50  # 将数值标签往上移一点
                     },
                     "text": {"field": "error_count"}
                 }
@@ -63,7 +62,7 @@ def draw_chart(data):
                         "field": "name",
                         "type": "nominal",
                         "axis": {"title": "排序条件"},
-                        "sort": {"field": "cumulative_percentage", "order": "ascending"}  # 确保 x 轴顺序与累计百分比一致
+                        "sort": {"field": "cumulative_percentage", "order": "ascending"}
                     },
                     "y": {
                         "field": "cumulative_percentage",
@@ -83,7 +82,7 @@ def draw_chart(data):
                         "field": "name",
                         "type": "nominal",
                         "axis": {"title": "排序条件"},
-                        "sort": {"field": "cumulative_percentage", "order": "ascending"}  # 确保 x 轴顺序与累计百分比一致
+                        "sort": {"field": "cumulative_percentage", "order": "ascending"}
                     },
                     "y": {
                         "field": "cumulative_percentage",
@@ -91,11 +90,6 @@ def draw_chart(data):
                         "axis": {"title": "累计百分比", "orient": "right"}
                     },
                     "color": {"value": "firebrick"},
-                    "text": {
-                        "field": "cumulative_percentage",
-                        "type": "quantitative",
-                        "format": ".1f"
-                    }
                 },
                 "layer": [
                     {
@@ -105,7 +99,6 @@ def draw_chart(data):
                                 "field": "cumulative_percentage",
                                 "type": "quantitative",
                                 "axis": {"title": "累计百分比", "orient": "right"},
-                                "offset": 50  # 将数值标签往上移一点
                             },
                             "text": {"field": "cumulative_percentage", "type": "quantitative", "format": ".1f"}
                         }
@@ -115,7 +108,7 @@ def draw_chart(data):
         ],
         "resolve": {
             "scale": {
-                "y": "independent"  # 独立的 y 轴
+                "y": "independent"
             }
         },
         "config": {
