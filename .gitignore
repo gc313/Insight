@@ -172,5 +172,4 @@ cython_debug/
 .pypirc
 
 # TestData
-data/*
-!data/
+data/

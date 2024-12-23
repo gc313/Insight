@@ -1,6 +1,12 @@
+import os
 import sqlite3
 
 def init_database():
+    # 确保 data 文件夹存在
+    data_dir = './data'
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+        
     conn = sqlite3.connect('./data/insight_data.db')
     cursor = conn.cursor()
 
