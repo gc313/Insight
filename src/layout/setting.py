@@ -33,7 +33,7 @@ def save_table_data(table_name, original_df, edited_df):
     conn.close()
 
 def setting_button():
-    if st.button("设置"):
+    if st.button("设置", use_container_width=True, icon = "⚙️"):
         setting_dialog()
 
 # 设置对话框
@@ -55,7 +55,7 @@ def setting_dialog():
             with st.expander(label):
                 data_list = db.fetch_all_table_data(table_name)
                 original_df = pd.DataFrame(data_list, columns=[db_con.COLUMN_ID, db_con.COLUMN_NAME])
-                editor = st.data_editor(original_df.drop(columns=[db_con.COLUMN_ID]), num_rows="dynamic", key=f"{table_name}_editor")
+                editor = st.data_editor(original_df.drop(columns=[db_con.COLUMN_ID]), num_rows="dynamic", key=f"{table_name}_editor", use_container_width = True)
                 
                 col1 = st.columns(1)
                 with col1[0]:

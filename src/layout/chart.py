@@ -14,7 +14,6 @@ def draw_chart(data):
     
     chart_spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "description": "A simple bar chart with embedded data and a line chart for cumulative percentage.",
         "data": {
             "values": data_frame.to_dict(orient='records')
         },

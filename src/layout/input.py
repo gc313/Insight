@@ -22,7 +22,7 @@ def data_filter_selectbox():
     
 # 显示添加数据按钮
 def data_input_button():
-    if st.button("添加数据"):
+    if st.button("添加数据", use_container_width=True, icon = "➕"):
         input_data_dialog()
 
 # 缓存下拉框选项
