@@ -17,41 +17,48 @@ def fetch_table_data(table_name):
 def setting_button():
     if st.button("设置"):
         setting_dialog()
-        
-        
+
 # 设置对话框
 @st.dialog("设置")
 def setting_dialog():
     tab1, tab2 = st.tabs(["统计分类", "空"])
-    conn = get_db_connection()
-    cursor = conn.cursor()
     
     with tab1:
         with st.expander("学期"):
             semester_list = fetch_table_data("semester")
-            df = pd.DataFrame(semester_list, columns=["id", "name"])
-            edited_df = st.data_editor(df, hide_index=True)
+            semester_df = pd.DataFrame(semester_list, columns=["id", "name"])
+            semester_df = semester_df.drop(columns=["id"])  # 去掉id列
+            st.data_editor(semester_df, hide_index=True, num_rows="dynamic", key="semester_editor")
+        
         with st.expander("单元"):
             unit_list = fetch_table_data("unit")
-            df = pd.DataFrame(unit_list, columns=["id", "name"])
-            edited_df = st.data_editor(df, hide_index=True)
+            unit_df = pd.DataFrame(unit_list, columns=["id", "name"])
+            unit_df = unit_df.drop(columns=["id"])  # 去掉id列
+            st.data_editor(unit_df, hide_index=True, num_rows="dynamic", key="unit_editor")
+        
         with st.expander("课时"):
             lesson_list = fetch_table_data("lesson")
-            df = pd.DataFrame(lesson_list, columns=["id", "name"])
-            edited_df = st.data_editor(df, hide_index=True)
+            lesson_df = pd.DataFrame(lesson_list, columns=["id", "name"])
+            lesson_df = lesson_df.drop(columns=["id"])  # 去掉id列
+            st.data_editor(lesson_df, hide_index=True, num_rows="dynamic", key="lesson_editor")
+        
         with st.expander("题型"):
             question_type_list = fetch_table_data("question_type")
-            df = pd.DataFrame(question_type_list, columns=["id", "name"])
-            edited_df = st.data_editor(df, hide_index=True)
+            question_type_df = pd.DataFrame(question_type_list, columns=["id", "name"])
+            question_type_df = question_type_df.drop(columns=["id"])  # 去掉id列
+            st.data_editor(question_type_df, hide_index=True, num_rows="dynamic", key="question_type_editor")
+        
         with st.expander("知识点"):
             knowledge_point_list = fetch_table_data("knowledge_point")
-            df = pd.DataFrame(knowledge_point_list, columns=["id", "name"])
-            edited_df = st.data_editor(df, hide_index=True)
+            knowledge_point_df = pd.DataFrame(knowledge_point_list, columns=["id", "name"])
+            knowledge_point_df = knowledge_point_df.drop(columns=["id"])  # 去掉id列
+            st.data_editor(knowledge_point_df, hide_index=True, num_rows="dynamic", key="knowledge_point_editor")
+        
         with st.expander("错误原因"):
             error_reason_list = fetch_table_data("error_reason")
-            df = pd.DataFrame(error_reason_list, columns=["id", "name"])
-            edited_df = st.data_editor(df, hide_index=True)
-        
+            error_reason_df = pd.DataFrame(error_reason_list, columns=["id", "name"])
+            error_reason_df = error_reason_df.drop(columns=["id"])  # 去掉id列
+            st.data_editor(error_reason_df, hide_index=True, num_rows="dynamic", key="error_reason_editor")
         
     with tab2:
         st.empty()

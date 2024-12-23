@@ -28,7 +28,7 @@ def init_database():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS semester (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+            name TEXT UNIQUE
         )
     """)
 
@@ -36,7 +36,7 @@ def init_database():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS unit (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+            name TEXT UNIQUE
         )
     """)
 
@@ -44,7 +44,7 @@ def init_database():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS lesson (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+            name TEXT UNIQUE
         )
     """)
 
@@ -52,7 +52,7 @@ def init_database():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS question_type (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+            name TEXT UNIQUE
         )
     """)
     
@@ -60,7 +60,7 @@ def init_database():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS knowledge_point (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+            name TEXT UNIQUE
         )
     """)
     
@@ -68,7 +68,7 @@ def init_database():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS error_reason (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+            name TEXT UNIQUE
         )
     """)
 
@@ -89,28 +89,27 @@ def init_debug_data():
 
     # 插入 学期 数据
     for semester_name in list_semester:
-        cursor.execute("INSERT INTO semester (name) VALUES (?)", (semester_name,))
+        cursor.execute("INSERT OR IGNORE INTO semester (name) VALUES (?)", (semester_name,))
 
     # 插入 单元 数据
     for unit_name in list_unit:
-        cursor.execute("INSERT INTO unit (name) VALUES (?)", (unit_name,))
+        cursor.execute("INSERT OR IGNORE INTO unit (name) VALUES (?)", (unit_name,))
 
     # 插入 课时 数据
     for lesson_name in list_lesson:
-        cursor.execute("INSERT INTO lesson (name) VALUES (?)", (lesson_name,))
+        cursor.execute("INSERT OR IGNORE INTO lesson (name) VALUES (?)", (lesson_name,))
 
     # 插入 题型 数据
     for question_type_name in list_question_type:
-        cursor.execute("INSERT INTO question_type (name) VALUES (?)", (question_type_name,))
+        cursor.execute("INSERT OR IGNORE INTO question_type (name) VALUES (?)", (question_type_name,))
 
     # 插入 知识点 数据
     for knowledge_point_name in list_knowledge_point:
-        cursor.execute("INSERT INTO knowledge_point (name) VALUES (?)", (knowledge_point_name,))
+        cursor.execute("INSERT OR IGNORE INTO knowledge_point (name) VALUES (?)", (knowledge_point_name,))
 
     # 插入 错误原因 数据
     for reason_description in list_reason:
-        cursor.execute("INSERT INTO error_reason (name) VALUES (?)", (reason_description,))
+        cursor.execute("INSERT OR IGNORE INTO error_reason (name) VALUES (?)", (reason_description,))
 
     conn.commit()
     conn.close()
-        
