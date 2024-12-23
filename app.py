@@ -1,6 +1,6 @@
 import sys
 sys.path.append('./src')
-import init
+import init as init
 import layout.main as main
 
 

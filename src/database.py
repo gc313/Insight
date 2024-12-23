@@ -5,12 +5,22 @@ import constants.db_constants as db_con
 def get_db_connection():
     return sqlite3.connect(db_con.DATABASE_PATH + '/' + db_con.DATABASE_NAME)
 
-def fetch_table_data(table_name):
+def fetch_all_table_data(table_name):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(f"SELECT * FROM {table_name}")
         data = cursor.fetchall()
     return data
+
+
+def fetch_select_data_from_table(table_name):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT {db_con.COLUMN_ID}, {db_con.COLUMN_NAME} FROM {table_name} ORDER BY {db_con.COLUMN_NAME}")
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
 
 # 通用的数据库查询函数
 def fetch_sorted_data(join_table, join_field, group_field):

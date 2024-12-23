@@ -53,7 +53,7 @@ def setting_dialog():
         
         for label, table_name in tables.items():
             with st.expander(label):
-                data_list = db.fetch_table_data(table_name)
+                data_list = db.fetch_all_table_data(table_name)
                 original_df = pd.DataFrame(data_list, columns=[db_con.COLUMN_ID, db_con.COLUMN_NAME])
                 editor = st.data_editor(original_df.drop(columns=[db_con.COLUMN_ID]), num_rows="dynamic", key=f"{table_name}_editor")
                 
