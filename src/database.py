@@ -13,7 +13,7 @@ def fetch_table_data(table_name):
     return data
 
 # 通用的数据库查询函数
-def fetch_sorted_data(table_name, join_table, join_field, group_field):
+def fetch_sorted_data(join_table, join_field, group_field):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         query = f"""

@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import database as db
+import constants.db_constants as db_con
 
 def draw_chart(data):
     data_frame = pd.DataFrame(data, columns=['name', 'error_count'])
@@ -35,19 +36,19 @@ def draw_chart(data):
     st.vega_lite_chart(chart_spec, use_container_width=True)
 
 def sort_data_by_semester():
-    return db.fetch_sorted_data('semester', 'semester', 'semester_id', 'name')
+    return db.fetch_sorted_data(db_con.TABLE_SEMESTER, db_con.COLUMN_SEMESTER_ID, db_con.COLUMN_NAME)
 
 def sort_data_by_unit():
-    return db.fetch_sorted_data('unit', 'unit', 'unit_id', 'name')
+    return db.fetch_sorted_data(db_con.TABLE_UNIT, db_con.COLUMN_UNIT_ID, db_con.COLUMN_NAME)
 
 def sort_data_by_lesson():
-    return db.fetch_sorted_data('lesson', 'lesson', 'lesson_id', 'name')
+    return db.fetch_sorted_data(db_con.TABLE_LESSON, db_con.COLUMN_LESSON_ID, db_con.COLUMN_NAME)
 
 def sort_data_by_question_type():
-    return db.fetch_sorted_data('question_type', 'question_type', 'question_type_id', 'name')
+    return db.fetch_sorted_data(db_con.TABLE_QUESTION_TYPE, db_con.COLUMN_QUESTION_TYPE_ID, db_con.COLUMN_NAME)
 
 def sort_data_by_knowledge_point():
-    return db.fetch_sorted_data('knowledge_point', 'knowledge_point', 'knowledge_point_id', 'name')
+    return db.fetch_sorted_data(db_con.TABLE_KNOWLEDGE_POINT, db_con.COLUMN_KNOWLEDGE_POINT_ID, db_con.COLUMN_NAME)
 
 def sort_data_by_error_reason():
-    return db.fetch_sorted_data('error_reason', 'error_reason', 'error_reason_id', 'name')
+    return db.fetch_sorted_data(db_con.TABLE_ERROR_REASON, db_con.COLUMN_ERROR_REASON_ID, db_con.COLUMN_NAME)
