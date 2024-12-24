@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import database as db
 import constants.db_constants as db_con
+import layout.chart_style as cs
 
 def draw_chart(data):
     data_frame = pd.DataFrame(data, columns=['name', 'error_count'])
@@ -9,113 +10,11 @@ def draw_chart(data):
     # 按 error_count 降序排序
     data_frame = data_frame.sort_values(by='error_count', ascending=False)
     
-    # 计算累计百分比
-    data_frame['cumulative_percentage'] = data_frame['error_count'].cumsum() / data_frame['error_count'].sum() * 100
+    # 计算累计百分比,以小数显示
+    data_frame['cumulative_percentage'] = data_frame['error_count'].cumsum() / data_frame['error_count'].sum()
+    print(data_frame)
     
-    chart_spec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "data": {
-            "values": data_frame.to_dict(orient='records')
-        },
-        "layer": [
-            {
-                "mark": "bar",
-                "encoding": {
-                    "x": {
-                        "field": "name",
-                        "type": "nominal",
-                        "axis": {"title": "排序条件"},
-                        "sort": {"field": "error_count", "order": "descending"}
-                    },
-                    "y": {
-                        "field": "error_count",
-                        "type": "quantitative",
-                        "axis": {"title": "错误数", "orient": "left"}
-                    }
-                }
-            },
-            {
-                "mark": "text",
-                "encoding": {
-                    "x": {
-                        "field": "name",
-                        "type": "nominal",
-                        "axis": {"title": "排序条件"},
-                        "sort": {"field": "error_count", "order": "descending"}
-                    },
-                    "y": {
-                        "field": "error_count",
-                        "type": "quantitative",
-                        "axis": {"title": "错误数", "orient": "left"},
-                    },
-                    "text": {"field": "error_count"}
-                }
-            },
-            {
-                "mark": {
-                    "type": "line",
-                    "point": {"filled": False}
-                },
-                "encoding": {
-                    "x": {
-                        "field": "name",
-                        "type": "nominal",
-                        "axis": {"title": "排序条件"},
-                        "sort": {"field": "cumulative_percentage", "order": "ascending"}
-                    },
-                    "y": {
-                        "field": "cumulative_percentage",
-                        "type": "quantitative",
-                        "axis": {"title": "累计百分比", "orient": "right"}
-                    },
-                    "color": {"value": "firebrick"}
-                }
-            },
-            {
-                "mark": {
-                    "type": "point",
-                    "filled": False
-                },
-                "encoding": {
-                    "x": {
-                        "field": "name",
-                        "type": "nominal",
-                        "axis": {"title": "排序条件"},
-                        "sort": {"field": "cumulative_percentage", "order": "ascending"}
-                    },
-                    "y": {
-                        "field": "cumulative_percentage",
-                        "type": "quantitative",
-                        "axis": {"title": "累计百分比", "orient": "right"}
-                    },
-                    "color": {"value": "firebrick"},
-                },
-                "layer": [
-                    {
-                        "mark": "text",
-                        "encoding": {
-                            "y": {
-                                "field": "cumulative_percentage",
-                                "type": "quantitative",
-                                "axis": {"title": "累计百分比", "orient": "right"},
-                            },
-                            "text": {"field": "cumulative_percentage", "type": "quantitative", "format": ".1f"}
-                        }
-                    }
-                ]
-            }
-        ],
-        "resolve": {
-            "scale": {
-                "y": "independent"
-            }
-        },
-        "config": {
-            "mark": {
-                "color": "steelblue"
-            }
-        }
-    }
+    chart_spec = cs.Get_Chart_Style(data_frame)
     st.vega_lite_chart(chart_spec, use_container_width=True)
 
 def sort_data_by_semester():
