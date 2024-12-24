@@ -1,7 +1,6 @@
 import streamlit as st
 import layout.chart as chart
 import database as db
-import constants.db_constants as db_con
 
 # 显示数据筛选列表
 def data_filter_selectbox():
