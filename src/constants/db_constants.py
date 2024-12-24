@@ -17,14 +17,15 @@ TABLE_ERROR_REASON = 'error_reason'
 
 # 列名
 COLUMN_ID = 'id'
+COLUMN_NAME = 'name'
 COLUMN_SEMESTER_ID = 'semester_id'
 COLUMN_UNIT_ID = 'unit_id'
 COLUMN_LESSON_ID = 'lesson_id'
 COLUMN_QUESTION_TYPE_ID = 'question_type_id'
 COLUMN_ERROR_REASON_ID = 'error_reason_id'
 COLUMN_KNOWLEDGE_POINT_ID = 'knowledge_point_id'
+COLUMN_IS_SELECTED = 'is_selected'
 COLUMN_CREATED_AT = 'created_at'
-COLUMN_NAME = 'name'
 
 # 其他常量（如果需要）
 FOREIGN_KEY_SEMESTER = f'FOREIGN KEY ({COLUMN_SEMESTER_ID}) REFERENCES {TABLE_SEMESTER}({COLUMN_ID})'

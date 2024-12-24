@@ -30,6 +30,7 @@ def fetch_sorted_data(join_table, join_field, group_field):
             SELECT {join_table}.{group_field}, COUNT({db_con.TABLE_ERR_INSIGHT}.{db_con.COLUMN_ID}) AS error_count 
             FROM {db_con.TABLE_ERR_INSIGHT} 
             JOIN {join_table} ON {db_con.TABLE_ERR_INSIGHT}.{join_field} = {join_table}.{db_con.COLUMN_ID} 
+            WHERE {join_table}.{db_con.COLUMN_IS_SELECTED} = 1
             GROUP BY {join_table}.{group_field} 
             ORDER BY error_count DESC
         """

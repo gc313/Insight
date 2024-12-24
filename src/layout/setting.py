@@ -22,12 +22,18 @@ def save_table_data(table_name, original_df, edited_df):
     # 找出需要插入的记录
     to_insert = [row for _, row in edited_df.iterrows() if row[db_con.COLUMN_NAME] not in original_dict]
     for row in to_insert:
-        cursor.execute(f"INSERT INTO {table_name} ({db_con.COLUMN_NAME}) VALUES (?)", (row[db_con.COLUMN_NAME],))
+        cursor.execute(
+            f"INSERT INTO {table_name} ({db_con.COLUMN_NAME}, {db_con.COLUMN_IS_SELECTED}) VALUES (?, ?)",
+            (row[db_con.COLUMN_NAME], row.get(db_con.COLUMN_IS_SELECTED, 1))
+        )
     
     # 找出需要更新的记录
     to_update = [row for _, row in edited_df.iterrows() if row[db_con.COLUMN_NAME] in original_dict and row[db_con.COLUMN_NAME] in edited_dict]
     for row in to_update:
-        cursor.execute(f"UPDATE {table_name} SET {db_con.COLUMN_NAME} = ? WHERE {db_con.COLUMN_ID} = ?", (row[db_con.COLUMN_NAME], original_dict[row[db_con.COLUMN_NAME]]))
+        cursor.execute(
+            f"UPDATE {table_name} SET {db_con.COLUMN_NAME} = ?, {db_con.COLUMN_IS_SELECTED} = ? WHERE {db_con.COLUMN_ID} = ?",
+            (row[db_con.COLUMN_NAME], row.get(db_con.COLUMN_IS_SELECTED, 1), original_dict[row[db_con.COLUMN_NAME]])
+        )
     
     conn.commit()
     conn.close()
@@ -54,8 +60,19 @@ def setting_dialog():
         for label, table_name in tables.items():
             with st.expander(label):
                 data_list = db.fetch_all_table_data(table_name)
-                original_df = pd.DataFrame(data_list, columns=[db_con.COLUMN_ID, db_con.COLUMN_NAME])
-                editor = st.data_editor(original_df.drop(columns=[db_con.COLUMN_ID]), num_rows="dynamic", key=f"{table_name}_editor", use_container_width = True)
+                original_df = pd.DataFrame(data_list, columns=[db_con.COLUMN_ID, db_con.COLUMN_NAME, db_con.COLUMN_IS_SELECTED])
+                editor = st.data_editor(
+                    original_df.drop(columns=[db_con.COLUMN_ID]), 
+                    num_rows="dynamic", 
+                    key=f"{table_name}_editor", 
+                    use_container_width = True,
+                    column_config={
+                    db_con.COLUMN_NAME: st.column_config.TextColumn("项目名称"),
+                    db_con.COLUMN_IS_SELECTED: st.column_config.CheckboxColumn("是否选用")
+                    }
+                )
+                # 确保 is_selected 列没有 NaN 值，使用默认值 1
+                editor[db_con.COLUMN_IS_SELECTED] = editor[db_con.COLUMN_IS_SELECTED].fillna(1)
                 
                 col1 = st.columns(1)
                 with col1[0]:
