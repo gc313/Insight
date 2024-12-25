@@ -5,6 +5,7 @@ import logging
 import database as db
 import constants.db_constants as db_con
 import event_handlers as eh
+import layout.about as abt
 from functools import partial
 
 # 设置日志记录，日志级别为 INFO
@@ -17,8 +18,8 @@ def setting_button():
 
 @st.dialog("设置")
 def setting_dialog():
-    # 显示设置对话框，包含两个标签页：“统计分类”和“空”。目前“空”标签页留白
-    tab1, tab2 = st.tabs(["统计分类", "空"]) # 创建两个标签页，另一个暂时留空
+    # 显示设置对话框
+    tab1, tab2 = st.tabs(["统计分类", "关于"]) 
     
     with tab1:
         # 在“统计分类”标签页中，定义了多个表格及其对应的数据库表名
@@ -75,5 +76,5 @@ def setting_dialog():
                             st.success(f"{label} 数据已保存！", icon="✔️")
                             time.sleep(0.8)
                             st.rerun(scope="fragment")
-    # with tab2:
-    #     st.empty() # 留白
+    with tab2:
+        abt.about_info()
