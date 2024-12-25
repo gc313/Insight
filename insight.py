@@ -29,12 +29,12 @@ import requests
 import webbrowser
 
 def start_streamlit():
-    # 启动 Streamlit 应用
+    # 启动 Streamlit 应用，并绑定到所有网络接口
     if getattr(sys, 'frozen', False):
         streamlit_script = os.path.join(sys._MEIPASS, "app.py")
-        subprocess.run(["streamlit", "run", streamlit_script], shell=True)
+        subprocess.Popen(["streamlit", "run", streamlit_script, "--server.address=0.0.0.0"], shell=True)
     else:
-        subprocess.run(["streamlit", "run", "app.py"], shell=True)
+        subprocess.Popen(["streamlit", "run", "app.py", "--server.address=0.0.0.0"], shell=True)
 
 def ensure_streamlit_config():
     config_path = Path.home() / ".streamlit" / "config.toml"
@@ -50,18 +50,20 @@ def ensure_streamlit_config():
             f.write("headless = true\n")
             f.write("port = 8501\n")
             f.write("enableCORS = false\n")
+            f.write("address = '0.0.0.0'\n")
 
 def check_server_ready(url="http://localhost:8501", timeout=30):
-    # 通过尝试连接检查服务器是否就绪。
     start_time = time.time()
     while time.time() - start_time < timeout:
         try:
             response = requests.get(url, timeout=1)
             if response.status_code == 200:
+                print("Streamlit 服务器已准备好！")
                 return True
-        except requests.exceptions.RequestException:
-            pass
+        except requests.exceptions.RequestException as e:
+            print(f"检查服务器状态时发生错误: {e}")
         time.sleep(0.5)  # 等待0.5秒再重试
+    print("Streamlit 服务器启动超时。")
     return False
 
 if __name__ == "__main__":

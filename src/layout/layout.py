@@ -48,3 +48,36 @@ def center_with_columns(func):
                 st.markdown('</div>', unsafe_allow_html=True)
         return result
     return wrapper
+
+
+def left_with_columns(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # 添加自定义 CSS 样式
+        st.markdown(
+            """
+            <style>
+            .left-container {
+                display: flex;
+                justify-content: left;
+                width: 100%;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+        
+        # 使用st.columns创建5列
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            # 调用被装饰的函数
+            func(*args, **kwargs)
+        
+        # 其他列可以留空或添加其他内容
+        with col2:
+            st.empty()
+        with col3:
+            st.empty()
+    
+    return wrapper

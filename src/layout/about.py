@@ -20,6 +20,7 @@
 # Thank you for supporting the open source community and the free software movement!
 
 import streamlit as st
+import constants.app_config as ac
 import subprocess
 
 def get_latest_version():
@@ -43,15 +44,16 @@ def show_copy_right():
     )
 
 def about_info():
+    app_name = ac.APP_NAME
     version = get_latest_version()
     st.markdown(f"""
-## 关于 Insight
+## 关于 {app_name}
 
 - **版本:** {version}
 
 ### 开源许可
 
-Insight 遵循 GNU 通用公共许可证 (GNU General Public License, GPL) 版本 3.0 发布。这意味着您有权利自由使用、研究、分享（复制）和改进该软件。同时，我们也要求任何基于此软件创建的衍生作品同样遵循这一许可协议，以确保整个社区的利益得到保护。GPLv3还提供了额外的保护措施，防止数字版权管理（DRM）技术限制用户的自由。
+{app_name} 遵循 GNU 通用公共许可证 (GNU General Public License, GPL) 版本 3.0 发布。这意味着您有权利自由使用、研究、分享（复制）和改进该软件。同时，我们也要求任何基于此软件创建的衍生作品同样遵循这一许可协议，以确保整个社区的利益得到保护。GPLv3还提供了额外的保护措施，防止数字版权管理（DRM）技术限制用户的自由。
 
 您可以访问以下链接了解更多关于GPLv3的信息：
 
@@ -63,6 +65,6 @@ Insight 遵循 GNU 通用公共许可证 (GNU General Public License, GPL) 版�
 如果您有兴趣参与开发或想查看项目的最新进展，请访问我们的GitHub仓库:
 [https://github.com/gc313/Insight](https://github.com/gc313/Insight)
 
-感谢您选择并支持Insight！
+感谢您选择并支持{app_name}！
 """)
     show_copy_right()

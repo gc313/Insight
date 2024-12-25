@@ -24,16 +24,20 @@ sys.path.append('./src')
 import init as init
 import streamlit as st
 import layout.main as main
+import constants.app_config as ac
 
 st.set_page_config(
-    page_title="Insight",
-    page_icon="📈",
+    page_title=ac.APP_NAME,
+    page_icon="./icon.ico",
     layout="wide"
 )
     
 if __name__ == "__main__":
     init.init_database()
     #init.init_debug_data() # 初始化调试数据
+    main.set_logo()
+    main.title_container()
+    st.divider()
     main.main_container()
     main.bottom_container()
     main.copyright()

@@ -19,41 +19,9 @@
 
 # Thank you for supporting the open source community and the free software movement!
 
-import os
-import streamlit as st
-import layout.chart as chart
-import layout.input as input
-import layout.setting as setting
-import layout.about as abt
-import constants.app_config as ac
-from layout.layout import center_with_columns
-from layout.layout import left_with_columns
+# Logo
+LOGO_DIR = 'pic'
+LOGO_NAME = 'insight.png'
 
-@left_with_columns
-def title_container():
-    st.title(ac.APP_NAME, anchor=False)
-    
-def main_container():
-    chart_placeholder = st.empty()
-    data = input.data_filter_selectbox()
-    with chart_placeholder:
-        chart.draw_chart(data)
-    
-@center_with_columns
-def bottom_container():
-    with st.container():
-            col1, col2 = st.columns(2)  # 在中间列中创建两列布局
-            with col1:
-                input.data_input_button()
-            with col2:
-                setting.setting_button()
-                
-@center_with_columns
-def copyright():
-    abt.show_copy_right()
-    
-def set_logo():
-    current_dir = os.path.dirname(__file__)
-    image_path = os.path.join(current_dir, "..", "..", ac.LOGO_DIR, ac.LOGO_NAME)
-    st.logo(image_path, size="large")
-    
+# 应用名称
+APP_NAME = 'Insight'
