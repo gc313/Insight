@@ -1,4 +1,23 @@
-# db_constants.py
+# Copyright (C) 2024  ThisWaySir
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# Additionally, we encourage all users to review the full license agreement to fully understand their rights and obligations. For more information about the GNU General Public License, please visit:
+# - Chinese: [GNU Official Website - GNU GPLv3 Chinese](https://www.gnu.org/licenses/quick-guide-gplv3.zh-cn.html)
+# - English: [GNU Official Website - GNU GPLv3 English](https://www.gnu.org/licenses/gpl-3.0.en.html)
+
+# Thank you for supporting the open source community and the free software movement!
 
 # 路径
 DATABASE_PATH = './data'
@@ -27,7 +46,7 @@ COLUMN_KNOWLEDGE_POINT_ID = 'knowledge_point_id'
 COLUMN_IS_SELECTED = 'is_selected'
 COLUMN_CREATED_AT = 'created_at'
 
-# 其他常量（如果需要）
+# 其他常量
 FOREIGN_KEY_SEMESTER = f'FOREIGN KEY ({COLUMN_SEMESTER_ID}) REFERENCES {TABLE_SEMESTER}({COLUMN_ID})'
 FOREIGN_KEY_UNIT = f'FOREIGN KEY ({COLUMN_UNIT_ID}) REFERENCES {TABLE_UNIT}({COLUMN_ID})'
 FOREIGN_KEY_LESSON = f'FOREIGN KEY ({COLUMN_LESSON_ID}) REFERENCES {TABLE_LESSON}({COLUMN_ID})'
