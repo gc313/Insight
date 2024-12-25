@@ -33,8 +33,9 @@ def Get_Chart_Style(data_frame):
                     "x": {
                         "field": "name",
                         "type": "nominal",
-                        "axis": {"title": "排序条件"},
-                        "sort": {"field": "error_count", "order": "descending"}
+                        "axis": {"title": "项目", "labelAngle": -60},
+                        "sort": {"field": "error_count", "order": "descending"},
+                        "angle": {"value": 60}
                     },
                     "y": {
                         "field": "error_count",

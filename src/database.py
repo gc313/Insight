@@ -114,7 +114,7 @@ def save_setting_table_data(table_name, original_df, edited_df):
         conn.close()
         
 # 缓存下拉框选项
-@st.cache_resource
+@st.cache_resource()
 def load_selectbox_options():
     # 从数据库中加载各个表的数据选项，并缓存结果
     options = {
@@ -129,11 +129,11 @@ def load_selectbox_options():
 
 # 保存错误信息到数据库
 def save_error_info():
-    # 加载下拉框选项
-    options = load_selectbox_options()
     # 获取数据库连接
     conn = get_db_connection()
     cursor = conn.cursor()
+    # 加载下拉框选项
+    options = load_selectbox_options()
     
     with st.form(key="input_data_form"):
         # 创建各个字段的下拉框供用户选择

@@ -28,7 +28,10 @@ from layout.layout import center_with_columns
 
 
 def main_container():
-    chart.draw_chart(input.data_filter_selectbox())
+    chart_placeholder = st.empty()
+    data = input.data_filter_selectbox()
+    with chart_placeholder:
+        chart.draw_chart(data)
     
 @center_with_columns
 def bottom_container():

@@ -32,7 +32,7 @@ def get_latest_version():
     return version
 
 def show_copy_right():
-    copyright = "Copyright (C) 2024  ThisWaySir"
+    copyright = "Copyright © 2024  ThisWaySir"
     st.markdown(
         f"""
         <div style="display: flex; justify-content: center; width: 100%;">
@@ -61,7 +61,7 @@ Insight 遵循 GNU 通用公共许可证 (GNU General Public License, GPL) 版�
 ### GitHub 仓库
 
 如果您有兴趣参与开发或想查看项目的最新进展，请访问我们的GitHub仓库:
-[Insight](https://github.com/gc313/Insight)
+[https://github.com/gc313/Insight](https://github.com/gc313/Insight)
 
 感谢您选择并支持Insight！
 """)

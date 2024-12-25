@@ -37,7 +37,7 @@ def setting_button():
     if st.button("设置", use_container_width=True, icon="⚙️"):
         setting_dialog()
 
-@st.dialog("设置")
+@st.dialog("⚙️ 设置")
 def setting_dialog():
     # 显示设置对话框
     tab1, tab2 = st.tabs(["统计分类", "关于"]) 
@@ -91,11 +91,12 @@ def setting_dialog():
                     if st.session_state[data_changed_key]:
                         # 如果数据发生变化，显示保存按钮
                         if st.button("保存", key=save_button_key, type="primary", use_container_width=True):
+                            db.load_selectbox_options.clear()
                             # 调用 save_table_data 函数保存数据，并重置数据变化标志
                             db.save_setting_table_data(table_name, original_df, editor)
                             st.session_state[data_changed_key] = False
                             st.success(f"{label} 数据已保存！", icon="✔️")
-                            time.sleep(0.8)
+                            time.sleep(0.5)
                             st.rerun(scope="fragment")
     with tab2:
         abt.about_info()

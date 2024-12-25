@@ -27,7 +27,7 @@ import layout.main as main
 
 st.set_page_config(
     page_title="Insight",
-    page_icon="💹",
+    page_icon="📈",
     layout="wide"
 )
     
