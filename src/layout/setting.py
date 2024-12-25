@@ -23,10 +23,10 @@ import streamlit as st
 import pandas as pd
 import time
 import logging
-import database as db
-import constants.db_constants as db_con
-import event_handlers as eh
-import layout.about as abt
+from src import database as db
+from src.constants import db_constants as db_con
+from src import event_handlers as eh
+from src.layout import about as abt
 from functools import partial
 
 # 设置日志记录，日志级别为 INFO
@@ -40,8 +40,8 @@ def setting_button():
 @st.dialog("⚙️ 设置")
 def setting_dialog():
     # 显示设置对话框
-    tab1, tab2 = st.tabs(["统计分类", "关于"]) 
-    
+    tab1, tab2 = st.tabs(["统计分类", "关于"])
+
     with tab1:
         # 在“统计分类”标签页中，定义了多个表格及其对应的数据库表名
         tables = {
@@ -52,27 +52,27 @@ def setting_dialog():
             "知识点": db_con.TABLE_KNOWLEDGE_POINT,
             "错误原因": db_con.TABLE_ERROR_REASON
         }
-        
+
         for label, table_name in tables.items():
             # 遍历每个表格，创建一个可展开的区域（expander），显示表格数据
             with st.expander(label):
                 # 从数据库中获取表格数据，并转换为 DataFrame
                 data_list = db.fetch_all_table_data(table_name)
                 original_df = pd.DataFrame(data_list, columns=[db_con.COLUMN_ID, db_con.COLUMN_NAME, db_con.COLUMN_IS_SELECTED])
-                
+
                 # 生成唯一的编辑器键和数据变化标志键
                 editor_key = f"{table_name}_editor"
                 data_changed_key = f"data_changed_{table_name}"
-                
+
                 # 初始化数据变化标志
                 if data_changed_key not in st.session_state:
                     st.session_state[data_changed_key] = False
-                
+
                 # 使用 Streamlit 的 data_editor 组件显示和编辑数据
                 editor = st.data_editor(
-                    original_df.drop(columns=[db_con.COLUMN_ID]), 
-                    num_rows="dynamic", 
-                    key=editor_key, 
+                    original_df.drop(columns=[db_con.COLUMN_ID]),
+                    num_rows="dynamic",
+                    key=editor_key,
                     use_container_width=True,
                     column_config={
                         db_con.COLUMN_NAME: st.column_config.TextColumn("项目名称"),
@@ -80,10 +80,10 @@ def setting_dialog():
                     },
                     on_change=partial(eh.on_data_change, editor_key, original_df, data_changed_key)
                 )
-                
+
                 # 确保 is_selected 列没有 NaN 值，使用默认值 1
                 editor[db_con.COLUMN_IS_SELECTED] = editor[db_con.COLUMN_IS_SELECTED].fillna(1)
-                
+
                 # 创建一个容器用于保存按钮
                 button_container = st.container()
                 with button_container:

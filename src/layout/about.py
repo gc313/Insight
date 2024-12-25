@@ -19,9 +19,9 @@
 
 # Thank you for supporting the open source community and the free software movement!
 
-import streamlit as st
-import constants.app_config as ac
 import subprocess
+import streamlit as st
+from src.constants import app_config as ac
 
 def get_latest_version():
     try:

@@ -22,7 +22,7 @@
 import sqlite3
 import time
 import streamlit as st
-import constants.db_constants as db_con
+from src.constants import db_constants as db_con
 
 # 获取数据库连接
 def get_db_connection():
@@ -50,11 +50,11 @@ def fetch_sorted_data(join_table, join_field, group_field):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         query = f"""
-            SELECT {join_table}.{group_field}, COUNT({db_con.TABLE_ERR_INSIGHT}.{db_con.COLUMN_ID}) AS error_count 
-            FROM {db_con.TABLE_ERR_INSIGHT} 
-            JOIN {join_table} ON {db_con.TABLE_ERR_INSIGHT}.{join_field} = {join_table}.{db_con.COLUMN_ID} 
+            SELECT {join_table}.{group_field}, COUNT({db_con.TABLE_ERR_INSIGHT}.{db_con.COLUMN_ID}) AS error_count
+            FROM {db_con.TABLE_ERR_INSIGHT}
+            JOIN {join_table} ON {db_con.TABLE_ERR_INSIGHT}.{join_field} = {join_table}.{db_con.COLUMN_ID}
             WHERE {join_table}.{db_con.COLUMN_IS_SELECTED} = 1
-            GROUP BY {join_table}.{group_field} 
+            GROUP BY {join_table}.{group_field}
             ORDER BY error_count DESC
         """
         cursor.execute(query)
@@ -65,15 +65,15 @@ def fetch_sorted_data(join_table, join_field, group_field):
 def save_setting_table_data(table_name, original_df, edited_df):
     conn = get_db_connection()
     cursor = conn.cursor()
-    
+
     try:
         # 移除 edited_df 中没有 'name' 值的行
         edited_df = edited_df.dropna(subset=[db_con.COLUMN_NAME])
-        
+
         # 创建字典存储原始数据和编辑后数据的 id 和 name 对应关系
         original_dict = {row[db_con.COLUMN_NAME]: row[db_con.COLUMN_ID] for _, row in original_df.iterrows()}
         edited_dict = {row[db_con.COLUMN_NAME]: row.get(db_con.COLUMN_ID) for _, row in edited_df.iterrows()}
-        
+
         # 找出需要删除的记录并执行删除操作
         to_delete = [name for name in original_dict if name not in edited_dict]
         if to_delete:
@@ -81,11 +81,11 @@ def save_setting_table_data(table_name, original_df, edited_df):
                 f"DELETE FROM {table_name} WHERE {db_con.COLUMN_NAME} = ?",
                 [(name,) for name in to_delete]
             )
-        
+
         # 找出需要插入的记录并执行插入操作
         to_insert = [
             (row[db_con.COLUMN_NAME], row.get(db_con.COLUMN_IS_SELECTED, 1))
-            for _, row in edited_df.iterrows() 
+            for _, row in edited_df.iterrows()
             if row[db_con.COLUMN_NAME] not in original_dict
         ]
         if to_insert:
@@ -93,11 +93,11 @@ def save_setting_table_data(table_name, original_df, edited_df):
                 f"INSERT INTO {table_name} ({db_con.COLUMN_NAME}, {db_con.COLUMN_IS_SELECTED}) VALUES (?, ?)",
                 to_insert
             )
-        
+
         # 找出需要更新的记录并执行更新操作
         to_update = [
             (row[db_con.COLUMN_NAME], row.get(db_con.COLUMN_IS_SELECTED, 1), original_dict[row[db_con.COLUMN_NAME]])
-            for _, row in edited_df.iterrows() 
+            for _, row in edited_df.iterrows()
             if row[db_con.COLUMN_NAME] in original_dict and row[db_con.COLUMN_NAME] in edited_dict
         ]
         if to_update:
@@ -105,14 +105,14 @@ def save_setting_table_data(table_name, original_df, edited_df):
                 f"UPDATE {table_name} SET {db_con.COLUMN_NAME} = ?, {db_con.COLUMN_IS_SELECTED} = ? WHERE {db_con.COLUMN_ID} = ?",
                 to_update
             )
-        
+
         conn.commit()
     except Exception as e:
         st.error(f"数据保存失败: {e}", icon="🚨")
         conn.rollback()
     finally:
         conn.close()
-        
+
 # 缓存下拉框选项
 @st.cache_resource()
 def load_selectbox_options():
@@ -134,7 +134,7 @@ def save_error_info():
     cursor = conn.cursor()
     # 加载下拉框选项
     options = load_selectbox_options()
-    
+
     with st.form(key="input_data_form"):
         # 创建各个字段的下拉框供用户选择
         semester_id = st.selectbox("学期", [row[1] for row in options[db_con.TABLE_SEMESTER]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_SEMESTER] if row[1] == x))
@@ -143,7 +143,7 @@ def save_error_info():
         question_type_id = st.selectbox("题型", [row[1] for row in options[db_con.TABLE_QUESTION_TYPE]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_QUESTION_TYPE] if row[1] == x))
         knowledge_point_id = st.selectbox("知识点", [row[1] for row in options[db_con.TABLE_KNOWLEDGE_POINT]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_KNOWLEDGE_POINT] if row[1] == x))
         reason_id = st.selectbox("错误原因", [row[1] for row in options[db_con.TABLE_ERROR_REASON]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_ERROR_REASON] if row[1] == x))
-        
+
         # 创建提交按钮
         submitted = st.form_submit_button("提交", type="primary", use_container_width=True)
         if submitted:
@@ -152,13 +152,13 @@ def save_error_info():
                 cursor.execute(f"""
                     INSERT INTO {db_con.TABLE_ERR_INSIGHT} ({db_con.COLUMN_SEMESTER_ID}, {db_con.COLUMN_UNIT_ID}, {db_con.COLUMN_LESSON_ID}, {db_con.COLUMN_QUESTION_TYPE_ID}, {db_con.COLUMN_KNOWLEDGE_POINT_ID}, {db_con.COLUMN_ERROR_REASON_ID})
                     VALUES (?, ?, ?, ?, ?, ?)
-                """, (get_option_id(options[db_con.TABLE_SEMESTER], semester_id), 
-                      get_option_id(options[db_con.TABLE_UNIT], unit_id), 
-                      get_option_id(options[db_con.TABLE_LESSON], lesson_id), 
-                      get_option_id(options[db_con.TABLE_QUESTION_TYPE], question_type_id), 
-                      get_option_id(options[db_con.TABLE_KNOWLEDGE_POINT], knowledge_point_id), 
+                """, (get_option_id(options[db_con.TABLE_SEMESTER], semester_id),
+                      get_option_id(options[db_con.TABLE_UNIT], unit_id),
+                      get_option_id(options[db_con.TABLE_LESSON], lesson_id),
+                      get_option_id(options[db_con.TABLE_QUESTION_TYPE], question_type_id),
+                      get_option_id(options[db_con.TABLE_KNOWLEDGE_POINT], knowledge_point_id),
                       get_option_id(options[db_con.TABLE_ERROR_REASON], reason_id)))
-                
+
                 conn.commit()
                 st.success("数据已添加！", icon="✔️")
             except Exception as e:
@@ -169,7 +169,7 @@ def save_error_info():
                 conn.close()
                 time.sleep(0.8)
                 st.rerun(scope="fragment")
-    
+
 # 获取选项的 ID
 def get_option_id(options, selected_value):
     # 根据用户选择的值查找对应的ID

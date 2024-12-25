@@ -20,9 +20,9 @@
 # Thank you for supporting the open source community and the free software movement!
 
 import streamlit as st
-import layout.chart as chart
-import database as db
-from layout.layout import center_with_columns
+from src.layout import chart
+from src import database as db
+from src.layout.layout import center_with_columns
 
 
 # 显示数据筛选列表
@@ -46,12 +46,12 @@ def data_filter_selectbox():
 @center_with_columns
 def data_selectbox():
     return st.selectbox(
-        "数据筛选", 
+        "数据筛选",
         ["学期", "单元", "课时", "题型", "知识点", "错误原因"],
         key="data_filter_selectbox",
         index=1
     )
-    
+
 # 显示添加数据按钮
 def data_input_button():
     # 创建一个按钮供用户点击以添加数据

@@ -20,8 +20,8 @@
 # Thank you for supporting the open source community and the free software movement!
 
 import os
-import database as db
-import constants.db_constants as db_con
+from src import database as db
+from src.constants import db_constants as db_con
 
 # 定义表名和列名常量
 TABLES = {
@@ -63,7 +63,7 @@ def init_database():
     data_dir = db_con.DATABASE_PATH  # 数据库路径
     if not os.path.exists(data_dir):  # 如果数据库路径不存在
         os.makedirs(data_dir)  # 创建数据库路径
-        
+
     with db.get_db_connection() as conn:  # 获取数据库连接
         cursor = conn.cursor()  # 创建游标
         for table_name, columns in TABLES.items():  # 遍历表名和列定义

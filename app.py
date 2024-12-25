@@ -19,19 +19,17 @@
 
 # Thank you for supporting the open source community and the free software movement!
 
-import sys
-sys.path.append('./src')
-import init as init
 import streamlit as st
-import layout.main as main
-import constants.app_config as ac
+from src import init
+from src.layout import main
+from src.constants import app_config as ac
 
 st.set_page_config(
     page_title=ac.APP_NAME,
-    page_icon=ac.APP_ICON,
+    page_icon=ac.ICON_PATH,
     layout="wide"
 )
-    
+
 if __name__ == "__main__":
     init.init_database()
     #init.init_debug_data() # 初始化调试数据

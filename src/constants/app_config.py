@@ -19,12 +19,16 @@
 
 # Thank you for supporting the open source community and the free software movement!
 
-# Logo
+import os
+
 PIC_DIR = 'pic'
 LOGO_NAME = 'insight.png'
 
 # 图标
-APP_ICON = f'.\{PIC_DIR}\icon16.ico'
+ICON_NAME = 'icon16.ico'
+current_dir = os.path.dirname(__file__)
+image_path = os.path.join(current_dir, "..", "..", PIC_DIR, ICON_NAME)
+ICON_PATH = image_path
 
 # 应用名称
 APP_NAME = 'Insight'

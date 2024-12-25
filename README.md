@@ -1,4 +1,4 @@
-# Insight
+# <img src="/pic/insight.png" alt="Insight Logo" style="width:64px;height:64px;margin-right:10px;"> Insight
 
 Error Insight for Learning
 
@@ -38,7 +38,7 @@ python insight.py
 deactivate
 ```
 
-### 5. 构建应用程序
+## 构建应用程序
 
 ```bash
 pyinstaller --onefile --windowed --icon=icon.ico insight.py
