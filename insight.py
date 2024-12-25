@@ -27,14 +27,39 @@ import sys
 from pathlib import Path
 import requests
 import webbrowser
+import atexit
+import signal
+import psutil
+
+streamlit_process = None
 
 def start_streamlit():
+    global streamlit_process
     # 启动 Streamlit 应用，并绑定到所有网络接口
     if getattr(sys, 'frozen', False):
         streamlit_script = os.path.join(sys._MEIPASS, "app.py")
-        subprocess.Popen(["streamlit", "run", streamlit_script, "--server.address=0.0.0.0"], shell=True)
+        streamlit_process = subprocess.Popen(
+            ["streamlit", "run", streamlit_script, "--server.address=0.0.0.0"],
+            shell=True,
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP  # 仅适用于 Windows
+        )
     else:
-        subprocess.Popen(["streamlit", "run", "app.py", "--server.address=0.0.0.0"], shell=True)
+        streamlit_process = subprocess.Popen(
+            ["streamlit", "run", "app.py", "--server.address=0.0.0.0"],
+            shell=True,
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP  # 仅适用于 Windows
+        )
+
+def stop_streamlit():
+    global streamlit_process
+    if streamlit_process:
+        try:
+            # 发送终止信号给 Streamlit 进程
+            streamlit_process.terminate()
+            streamlit_process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            # 如果进程未在 5 秒内终止，则强制终止
+            streamlit_process.kill()
 
 def ensure_streamlit_config():
     config_path = Path.home() / ".streamlit" / "config.toml"
@@ -49,8 +74,12 @@ def ensure_streamlit_config():
             f.write("[server]\n")
             f.write("headless = true\n")
             f.write("port = 8501\n")
-            f.write("enableCORS = false\n")
+            f.write("enableCORS = true\n")  # 保留默认设置
+            f.write("enableXsrfProtection = true\n")  # 保留默认设置
             f.write("address = '0.0.0.0'\n")
+            f.write("\n")  # 添加空行分隔不同部分
+            f.write("[browser]\n")
+            f.write("gatherUsageStats = false\n")  # 正确的配置选项
 
 def check_server_ready(url="http://localhost:8501", timeout=30):
     start_time = time.time()
@@ -66,9 +95,32 @@ def check_server_ready(url="http://localhost:8501", timeout=30):
     print("Streamlit 服务器启动超时。")
     return False
 
+def kill_port(port):
+    terminated_pids = set()  # 记录已终止的进程ID
+    for proc in psutil.process_iter(['pid', 'name']):
+        try:
+            connections = proc.net_connections(kind='inet')
+            for conn in connections:
+                if conn.laddr and conn.laddr.port == port and proc.pid not in terminated_pids:
+                    print(f"终止进程 {proc.pid} ({proc.name()}) 占用端口 {port}")
+                    proc.kill()
+                    terminated_pids.add(proc.pid)  # 添加到已终止集合
+                    break  # 终止后跳出内层循环
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+
+# 注册退出处理函数，确保在程序结束时终止 Streamlit 进程
+atexit.register(stop_streamlit)
+
+# 捕获 Ctrl+C 并调用 stop_streamlit
+signal.signal(signal.SIGINT, lambda signum, frame: stop_streamlit())
+
 if __name__ == "__main__":
     # 确保 Streamlit 配置文件存在
     ensure_streamlit_config()
+
+    # 杀死占用端口 8501 的进程
+    kill_port(8501)
 
     # 在后台线程中启动 Streamlit 应用
     thread = threading.Thread(target=start_streamlit)

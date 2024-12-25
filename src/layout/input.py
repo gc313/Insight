@@ -45,9 +45,8 @@ def data_filter_selectbox():
 
 @center_with_columns
 def data_selectbox():
-    st.markdown('<h5>🔍 统计条件:</h5>', unsafe_allow_html=True)
     return st.selectbox(
-        "",  # 空标签，因为我们在上面已经用 markdown 定义了标签
+        "数据筛选", 
         ["学期", "单元", "课时", "题型", "知识点", "错误原因"],
         key="data_filter_selectbox",
         index=1
