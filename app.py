@@ -28,7 +28,7 @@ import constants.app_config as ac
 
 st.set_page_config(
     page_title=ac.APP_NAME,
-    page_icon="./icon.ico",
+    page_icon=ac.APP_ICON,
     layout="wide"
 )
     

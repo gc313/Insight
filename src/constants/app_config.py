@@ -20,8 +20,11 @@
 # Thank you for supporting the open source community and the free software movement!
 
 # Logo
-LOGO_DIR = 'pic'
+PIC_DIR = 'pic'
 LOGO_NAME = 'insight.png'
+
+# 图标
+APP_ICON = f'.\{PIC_DIR}\icon16.ico'
 
 # 应用名称
 APP_NAME = 'Insight'

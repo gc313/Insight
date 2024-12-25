@@ -54,6 +54,6 @@ def copyright():
     
 def set_logo():
     current_dir = os.path.dirname(__file__)
-    image_path = os.path.join(current_dir, "..", "..", ac.LOGO_DIR, ac.LOGO_NAME)
+    image_path = os.path.join(current_dir, "..", "..", ac.PIC_DIR, ac.LOGO_NAME)
     st.logo(image_path, size="large")
     

@@ -29,7 +29,7 @@ pip install -r requirements.txt
 ### 3. 运行应用
 
 ```bash
-streamlit run app.py
+python insight.py
 ```
 
 ### 4. 关闭虚拟环境
@@ -37,3 +37,11 @@ streamlit run app.py
 ```bash
 deactivate
 ```
+
+### 5. 构建应用程序
+
+```bash
+pyinstaller --onefile --windowed --icon=icon.ico insight.py
+```
+
+构建完成后，`dist`目录下会出现一个可执行文件。
