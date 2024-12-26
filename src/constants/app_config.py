@@ -32,3 +32,6 @@ ICON_PATH = image_path
 
 # 应用名称
 APP_NAME = 'Insight'
+
+# 版本
+VERSION = 'v1.0.0'

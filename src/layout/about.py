@@ -24,13 +24,13 @@ import streamlit as st
 from src.constants import app_config as ac
 
 def get_latest_version():
-    try:
-        # 执行 git describe --tags 命令来获取最新的 tag
-        version = subprocess.check_output(['git', 'describe', '--tags'], stderr=subprocess.STDOUT).strip().decode('utf-8')
-    except subprocess.CalledProcessError:
-        # 如果没有找到 tag，返回默认值
-        version = "unknown"
-    return version
+    # try:
+    #     # 执行 git describe --tags 命令来获取最新的 tag
+    #     version = subprocess.check_output(['git', 'describe', '--tags'], stderr=subprocess.STDOUT).strip().decode('utf-8')
+    # except subprocess.CalledProcessError:
+    #     # 如果没有找到 tag，返回默认值
+    #     version = "unknown"
+    return ac.VERSION
 
 def show_copy_right():
     copyright = "Copyright © 2024  ThisWaySir"
