@@ -19,6 +19,8 @@
 
 # Thank you for supporting the open source community and the free software movement!
 
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 import streamlit as st
 from src import init
 from src.layout import main
