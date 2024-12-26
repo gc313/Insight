@@ -147,28 +147,32 @@ def save_error_info():
         # 创建提交按钮
         submitted = st.form_submit_button("提交", type="primary", use_container_width=True)
         if submitted:
-            try:
-                # 将用户选择的数据插入到 err_insight 表中
-                cursor.execute(f"""
-                    INSERT INTO {db_con.TABLE_ERR_INSIGHT} ({db_con.COLUMN_SEMESTER_ID}, {db_con.COLUMN_UNIT_ID}, {db_con.COLUMN_LESSON_ID}, {db_con.COLUMN_QUESTION_TYPE_ID}, {db_con.COLUMN_KNOWLEDGE_POINT_ID}, {db_con.COLUMN_ERROR_REASON_ID})
-                    VALUES (?, ?, ?, ?, ?, ?)
-                """, (get_option_id(options[db_con.TABLE_SEMESTER], semester_id),
-                      get_option_id(options[db_con.TABLE_UNIT], unit_id),
-                      get_option_id(options[db_con.TABLE_LESSON], lesson_id),
-                      get_option_id(options[db_con.TABLE_QUESTION_TYPE], question_type_id),
-                      get_option_id(options[db_con.TABLE_KNOWLEDGE_POINT], knowledge_point_id),
-                      get_option_id(options[db_con.TABLE_ERROR_REASON], reason_id)))
+            # 验证所有 selectbox 的值是否为空
+            if not semester_id or not unit_id or not lesson_id or not question_type_id or not knowledge_point_id or not reason_id:
+                st.error("请选择所有字段！", icon="⚠️")
+            else:
+                try:
+                    # 将用户选择的数据插入到 err_insight 表中
+                    cursor.execute(f"""
+                        INSERT INTO {db_con.TABLE_ERR_INSIGHT} ({db_con.COLUMN_SEMESTER_ID}, {db_con.COLUMN_UNIT_ID}, {db_con.COLUMN_LESSON_ID}, {db_con.COLUMN_QUESTION_TYPE_ID}, {db_con.COLUMN_KNOWLEDGE_POINT_ID}, {db_con.COLUMN_ERROR_REASON_ID})
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    """, (get_option_id(options[db_con.TABLE_SEMESTER], semester_id),
+                          get_option_id(options[db_con.TABLE_UNIT], unit_id),
+                          get_option_id(options[db_con.TABLE_LESSON], lesson_id),
+                          get_option_id(options[db_con.TABLE_QUESTION_TYPE], question_type_id),
+                          get_option_id(options[db_con.TABLE_KNOWLEDGE_POINT], knowledge_point_id),
+                          get_option_id(options[db_con.TABLE_ERROR_REASON], reason_id)))
 
-                conn.commit()
-                st.success("数据已添加！", icon="✔️")
-            except Exception as e:
-                st.error(f"数据保存失败: {e}", icon="🚨")
-                conn.rollback()
-            finally:
-                # 确保在任何情况下都关闭数据库连接
-                conn.close()
-                time.sleep(0.8)
-                st.rerun(scope="fragment")
+                    conn.commit()
+                    st.success("数据已添加！", icon="✔️")
+                except Exception as e:
+                    st.error(f"数据保存失败: {e}", icon="🚨")
+                    conn.rollback()
+                finally:
+                    # 确保在任何情况下都关闭数据库连接
+                    conn.close()
+                    time.sleep(0.8)
+                    st.rerun(scope="fragment")
 
 # 获取选项的 ID
 def get_option_id(options, selected_value):

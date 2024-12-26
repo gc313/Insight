@@ -91,12 +91,16 @@ def setting_dialog():
                     if st.session_state[data_changed_key]:
                         # 如果数据发生变化，显示保存按钮
                         if st.button("保存", key=save_button_key, type="primary", use_container_width=True):
-                            db.load_selectbox_options.clear()
-                            # 调用 save_table_data 函数保存数据，并重置数据变化标志
-                            db.save_setting_table_data(table_name, original_df, editor)
-                            st.session_state[data_changed_key] = False
-                            st.success(f"{label} 数据已保存！", icon="✔️")
-                            time.sleep(0.5)
-                            st.rerun(scope="fragment")
+                            # 检查 name 列是否有空值
+                            if editor[db_con.COLUMN_NAME].isnull().any():
+                                st.error(f"{label} 数据中的“项目名称”列不能为空！", icon="⚠️")
+                            else:
+                                db.load_selectbox_options.clear()
+                                # 调用 save_table_data 函数保存数据，并重置数据变化标志
+                                db.save_setting_table_data(table_name, original_df, editor)
+                                st.session_state[data_changed_key] = False
+                                st.success(f"{label} 数据已保存！", icon="✔️")
+                                time.sleep(0.5)
+                                st.rerun(scope="fragment")
     with tab2:
         abt.about_info()
