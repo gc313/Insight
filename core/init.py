@@ -22,6 +22,7 @@
 import os
 from core import database as db
 from core.constants import db_constants as db_con
+from core.constants import app_config as ac
 
 # 定义表名和列名常量
 TABLES = {

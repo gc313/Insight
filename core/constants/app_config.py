@@ -21,17 +21,56 @@
 
 import os
 
-PIC_DIR = 'pic'
-LOGO_NAME = 'insight.png'
-
-# 图标
-ICON_NAME = 'icon16.ico'
-current_dir = os.path.dirname(__file__)
-image_path = os.path.join(current_dir, "..", "..", PIC_DIR, ICON_NAME)
-ICON_PATH = image_path
-
 # 应用名称
 APP_NAME = 'Insight'
 
 # 版本
-VERSION = 'v1.0.0'
+VERSION = 'v1.1.0'
+
+# 路径
+CURRENT_DIR = os.path.dirname(__file__)
+ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
+USER_DIR = os.path.expanduser('~')
+
+# 颜色
+PRIMARY_COLOR = '#6BAED6'
+BACKGROUND_COLOR = '#FFFFFF'
+SECONDARY_BACKGROUND_COLOR = '#F0F2F6'
+TEXT_COLOR = '#31333F'
+
+# 字体
+PRIMARY_FONT = 'sans serif'
+
+
+# 图标
+PIC_DIR = 'pic'
+LOGO_NAME = 'insight.png'
+ICON_NAME = 'icon16.ico'
+
+IMAGE_PATH = os.path.join(ROOT_DIR, PIC_DIR, ICON_NAME)
+ICON_PATH = IMAGE_PATH
+
+# 配置文件
+CONFIG_DIR_NAME = '.streamlit'
+CONFIG_FILE_NAME = 'config.toml'
+CREDENTIALS_FILE_NAME = 'credentials.toml'
+CONFIG_DIR_PATH = os.path.join(USER_DIR, CONFIG_DIR_NAME)
+CONFIG_FILE_PATH = os.path.join(CONFIG_DIR_PATH, CONFIG_FILE_NAME)
+CREDENTIALS_FILE_PATH = os.path.join(CONFIG_DIR_PATH, CREDENTIALS_FILE_NAME)
+
+CONFIG_CONTENT = f"""
+[browser]
+gatherUsageStats = false
+
+[theme]
+primaryColor="{PRIMARY_COLOR}"
+backgroundColor="{BACKGROUND_COLOR}"
+secondaryBackgroundColor="{SECONDARY_BACKGROUND_COLOR}"
+textColor="{TEXT_COLOR}"
+font="{PRIMARY_FONT}"
+"""
+
+CREDENTIALS_CONTENT = f"""
+[general]
+email = ""
+"""
