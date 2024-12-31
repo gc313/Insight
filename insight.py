@@ -1,7 +1,9 @@
 import streamlit.web.cli as stcli
 import sys
+import os
 import logging
 from pathlib import Path
+from core.constants import app_config as ac
 
 def get_root_path():
     """获取根路径"""
@@ -27,6 +29,24 @@ def setup_logging(log_dir='log'):
         level=logging.INFO,
     )
     logging.info(f"日志系统已初始化，日志文件路径: {log_file_path}")
+    
+# 生成配置文件
+def ensure_streamlit_config():
+    # 确保目录存在
+    config_dir = ac.CONFIG_DIR_PATH
+    os.makedirs(config_dir, exist_ok=True)
+    
+    # 创建 credentials.toml 文件占位，避免询问电子邮件地址
+    credentials_file_path = ac.CREDENTIALS_FILE_PATH
+    if not os.path.exists(credentials_file_path):
+        with open(credentials_file_path, 'w') as credentials_file:
+            credentials_file.write(ac.CREDENTIALS_CONTENT)
+    
+    # 创建 config.toml 文件
+    config_file_path = ac.CONFIG_FILE_PATH
+    if not os.path.exists(config_file_path):
+        with open(config_file_path, 'w') as config_file:
+            config_file.write(ac.CONFIG_CONTENT)
 
 def check_and_run_streamlit(development_mode=False):
     """检查并启动 Streamlit 应用"""
@@ -36,10 +56,8 @@ def check_and_run_streamlit(development_mode=False):
     sys.argv = [
         "streamlit",
         "run",
-        str(Path(get_root_path(), script_name)),  # 使用 get_root_path 获取正确的路径
-        "--global.developmentMode=false" if not development_mode else "--global.developmentMode=true",
-        #"--server.headless=true",  # 启用无头模式
-        "--browser.gatherUsageStats=false"  # 禁用遥测数据收集
+        str(Path(get_root_path(), script_name)), # 使用 get_root_path 获取正确的路径
+        "--global.developmentMode=false" if not development_mode else "--global.developmentMode=true"
     ]
 
     try:
@@ -50,7 +68,7 @@ def check_and_run_streamlit(development_mode=False):
         sys.exit(1)
 
 if __name__ == "__main__":
-    setup_logging()  # 初始化日志设置
-
-    # 启动 Streamlit 应用
-    check_and_run_streamlit()
+    
+    ensure_streamlit_config() # 确保配置文件存在
+    setup_logging() # 初始化日志设置
+    check_and_run_streamlit() #启动 Streamlit 应用

@@ -22,9 +22,9 @@
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 import streamlit as st
-from src import init
-from src.layout import main
-from src.constants import app_config as ac
+from core import init
+from core.layout import main
+from core.constants import app_config as ac
 
 st.set_page_config(
     page_title=ac.APP_NAME,

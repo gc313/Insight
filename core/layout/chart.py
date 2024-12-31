@@ -21,9 +21,9 @@
 
 import pandas as pd
 import streamlit as st
-from src import database as db
-from src.constants import db_constants as db_con
-from src.layout import chart_style as cs
+from core import database as db
+from core.constants import db_constants as db_con
+from core.layout import chart_style as cs
 
 def draw_chart(data):
     data_frame = pd.DataFrame(data, columns=['name', 'error_count'])
