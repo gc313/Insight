@@ -23,10 +23,10 @@ import streamlit as st
 import pandas as pd
 import time
 import logging
-from src import database as db
-from src.constants import db_constants as db_con
-from src import event_handlers as eh
-from src.layout import about as abt
+from core import database as db
+from core.constants import db_constants as db_con
+from core import event_handlers as eh
+from core.layout import about as abt
 from functools import partial
 
 # 设置日志记录，日志级别为 INFO

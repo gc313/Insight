@@ -20,9 +20,9 @@
 # Thank you for supporting the open source community and the free software movement!
 
 import streamlit as st
-from src.layout import chart
-from src import database as db
-from src.layout.layout import center_with_columns
+from core.layout import chart
+from core import database as db
+from core.layout.layout import center_with_columns
 
 
 # 显示数据筛选列表

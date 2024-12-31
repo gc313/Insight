@@ -21,7 +21,7 @@
 
 import subprocess
 import streamlit as st
-from src.constants import app_config as ac
+from core.constants import app_config as ac
 
 def get_latest_version():
     # try:

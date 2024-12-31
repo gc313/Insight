@@ -22,7 +22,7 @@
 import sqlite3
 import time
 import streamlit as st
-from src.constants import db_constants as db_con
+from core.constants import db_constants as db_con
 
 # 获取数据库连接
 def get_db_connection():
@@ -49,14 +49,29 @@ def fetch_select_data_from_table(table_name):
 def fetch_sorted_data(join_table, join_field, group_field):
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        query = f"""
-            SELECT {join_table}.{group_field}, COUNT({db_con.TABLE_ERR_INSIGHT}.{db_con.COLUMN_ID}) AS error_count
-            FROM {db_con.TABLE_ERR_INSIGHT}
-            JOIN {join_table} ON {db_con.TABLE_ERR_INSIGHT}.{join_field} = {join_table}.{db_con.COLUMN_ID}
-            WHERE {join_table}.{db_con.COLUMN_IS_SELECTED} = 1
-            GROUP BY {join_table}.{group_field}
-            ORDER BY error_count DESC
-        """
+        
+        # 判断 join_table 是否为 semester 表
+        if join_table == db_con.TABLE_SEMESTER:
+            query = f"""
+                SELECT {join_table}.{group_field} AS group_field, COUNT({db_con.TABLE_ERR_INSIGHT}.{db_con.COLUMN_ID}) AS error_count
+                FROM {db_con.TABLE_ERR_INSIGHT}
+                JOIN {join_table} ON {db_con.TABLE_ERR_INSIGHT}.{join_field} = {join_table}.{db_con.COLUMN_ID}
+                WHERE {join_table}.{db_con.COLUMN_IS_SELECTED} = 1
+                GROUP BY {join_table}.{group_field}
+                ORDER BY error_count DESC
+            """
+        else:
+            query = f"""
+                SELECT {join_table}.{group_field} AS group_field, COUNT({db_con.TABLE_ERR_INSIGHT}.{db_con.COLUMN_ID}) AS error_count
+                FROM {db_con.TABLE_ERR_INSIGHT}
+                JOIN {join_table} ON {db_con.TABLE_ERR_INSIGHT}.{join_field} = {join_table}.{db_con.COLUMN_ID}
+                JOIN {db_con.TABLE_SEMESTER} ON {db_con.TABLE_ERR_INSIGHT}.{db_con.COLUMN_SEMESTER_ID} = {db_con.TABLE_SEMESTER}.{db_con.COLUMN_ID}
+                WHERE {join_table}.{db_con.COLUMN_IS_SELECTED} = 1
+                AND {db_con.TABLE_SEMESTER}.{db_con.COLUMN_IS_SELECTED} = 1
+                GROUP BY {join_table}.{group_field}
+                ORDER BY error_count DESC
+            """
+        
         cursor.execute(query)
         data = cursor.fetchall()
     return data

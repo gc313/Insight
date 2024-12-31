@@ -21,13 +21,13 @@
 
 import os
 import streamlit as st
-from src.layout import chart
-from src.layout import input
-from src.layout import setting
-from src.layout import about as abt
-from src.constants import app_config as ac
-from src.layout.layout import center_with_columns
-from src.layout.layout import left_with_columns
+from core.layout import chart
+from core.layout import input
+from core.layout import setting
+from core.layout import about as abt
+from core.constants import app_config as ac
+from core.layout.layout import center_with_columns
+from core.layout.layout import left_with_columns
 
 @left_with_columns
 def title_container():

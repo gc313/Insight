@@ -21,7 +21,7 @@
 
 import streamlit as st
 import pandas as pd
-from src.constants import db_constants as db_con
+from core.constants import db_constants as db_con
 
 # 定义一个回调函数，当setting界面数据被修改时触发
 def on_data_change(editor_key, original_df, data_changed_key):

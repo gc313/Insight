@@ -20,8 +20,8 @@
 # Thank you for supporting the open source community and the free software movement!
 
 import os
-from src import database as db
-from src.constants import db_constants as db_con
+from core import database as db
+from core.constants import db_constants as db_con
 
 # 定义表名和列名常量
 TABLES = {
