@@ -98,8 +98,8 @@ def setting_dialog():
                                 db.load_selectbox_options.clear()
                                 # 调用 save_table_data 函数保存数据，并重置数据变化标志
                                 db.save_setting_table_data(table_name, original_df, editor)
-                                st.session_state[data_changed_key] = False
                                 st.success(f"{label} 数据已保存！", icon="✔️")
+                                st.session_state[data_changed_key] = False
                                 time.sleep(0.5)
                                 st.rerun(scope="fragment")
     with tab2:

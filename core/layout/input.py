@@ -19,9 +19,11 @@
 
 # Thank you for supporting the open source community and the free software movement!
 
+import time
 import streamlit as st
 from core.layout import chart
 from core import database as db
+from core.constants import db_constants as db_con
 from core.layout.layout import center_with_columns
 
 
@@ -61,4 +63,26 @@ def data_input_button():
 # 输入数据对话框
 @st.dialog("✏️ 添加数据")
 def input_data_dialog():
-    db.save_error_info()
+    # 加载下拉框选项
+    options = db.load_selectbox_options()
+
+    with st.form(key="input_data_form"):
+        # 创建各个字段的下拉框供用户选择
+        semester_id = st.selectbox("学期", [row[1] for row in options[db_con.TABLE_SEMESTER]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_SEMESTER] if row[1] == x))
+        unit_id = st.selectbox("单元", [row[1] for row in options[db_con.TABLE_UNIT]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_UNIT] if row[1] == x))
+        lesson_id = st.selectbox("课时", [row[1] for row in options[db_con.TABLE_LESSON]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_LESSON] if row[1] == x))
+        question_type_id = st.selectbox("题型", [row[1] for row in options[db_con.TABLE_QUESTION_TYPE]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_QUESTION_TYPE] if row[1] == x))
+        knowledge_point_id = st.selectbox("知识点", [row[1] for row in options[db_con.TABLE_KNOWLEDGE_POINT]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_KNOWLEDGE_POINT] if row[1] == x))
+        reason_id = st.selectbox("错误原因", [row[1] for row in options[db_con.TABLE_ERROR_REASON]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_ERROR_REASON] if row[1] == x))
+
+        # 创建提交按钮
+        submitted = st.form_submit_button("提交", type="primary", use_container_width=True)
+        if submitted:
+            # 验证所有 selectbox 的值是否为空
+            if not semester_id or not unit_id or not lesson_id or not question_type_id or not knowledge_point_id or not reason_id:
+                st.error("请选择所有字段！", icon="⚠️")
+            else:
+                db.recode_error_statistics(options, semester_id, unit_id, lesson_id, question_type_id, knowledge_point_id, reason_id)
+                time.sleep(0.5)
+                st.rerun(scope="fragment")
+                

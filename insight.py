@@ -48,7 +48,7 @@ def ensure_streamlit_config():
         with open(config_file_path, 'w') as config_file:
             config_file.write(ac.CONFIG_CONTENT)
 
-def check_and_run_streamlit():
+def check_and_run_streamlit(development_mode=False):
     """检查并启动 Streamlit 应用"""
     script_name = "app.py"
 
@@ -56,7 +56,8 @@ def check_and_run_streamlit():
     sys.argv = [
         "streamlit",
         "run",
-        str(Path(get_root_path(), script_name)) # 使用 get_root_path 获取正确的路径
+        str(Path(get_root_path(), script_name)), # 使用 get_root_path 获取正确的路径
+        "--global.developmentMode=false" if not development_mode else "--global.developmentMode=true"
     ]
 
     try:

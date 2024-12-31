@@ -40,7 +40,7 @@ deactivate
 
 ## 构建应用程序
 
-### 1. 第一次打包
+### 1. 第一次打包(如果没做其他调整，可以直接从第2步开始)
 
 如果使用虚拟环境，需要先进入虚拟环境，这里假设虚拟环境名为`venv`。
 
@@ -48,11 +48,11 @@ deactivate
 pyinstaller --onefile --windowed --additional-hooks-dir=./hooks --icon=icon.ico insight.py --clean
 ```
 
-此时在根目录的`dist`目录下会出现一个可执行文件，可以删除不要。
+此时在根目录的`dist`目录下会出现一个可执行文件，删除不要。
 
-### 2. 编辑.spec文件
+### 2. 编辑(或新建).spec文件
 
-根目录下会出现`insight.spec`文件，打开后修改如下：
+根目录下会出现`insight.spec`文件，打开后修改如下(如果跳过了第1步，需要新建该文件)：
 
 ```python
 # -*- mode: python ; coding: utf-8 -*-
@@ -67,8 +67,8 @@ datas = [
     # 将当前目录下的 app.py 文件打包到目标路径的根目录 "./"
     ("./app.py", "./"),
     
-    # 将 src 文件夹及其内容打包到目标路径 "./src"
-    ("./src", "./src"),
+    # 将 core 文件夹及其内容打包到目标路径 "./core"
+    ("./core", "./core"),
     
     # 将 pic 文件夹及其内容打包到目标路径 "./pic"
     ("./pic", "./pic")

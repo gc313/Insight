@@ -20,7 +20,6 @@
 # Thank you for supporting the open source community and the free software movement!
 
 import sqlite3
-import time
 import streamlit as st
 from core.constants import db_constants as db_con
 
@@ -142,34 +141,21 @@ def load_selectbox_options():
     }
     return options
 
-# 保存错误信息到数据库
-def save_error_info():
+# 获取错误统计数据
+def recode_error_statistics(options, semester_id, unit_id, lesson_id, question_type_id, knowledge_point_id, reason_id):
     # 获取数据库连接
     conn = get_db_connection()
     cursor = conn.cursor()
-    # 加载下拉框选项
-    options = load_selectbox_options()
-
-    with st.form(key="input_data_form"):
-        # 创建各个字段的下拉框供用户选择
-        semester_id = st.selectbox("学期", [row[1] for row in options[db_con.TABLE_SEMESTER]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_SEMESTER] if row[1] == x))
-        unit_id = st.selectbox("单元", [row[1] for row in options[db_con.TABLE_UNIT]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_UNIT] if row[1] == x))
-        lesson_id = st.selectbox("课时", [row[1] for row in options[db_con.TABLE_LESSON]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_LESSON] if row[1] == x))
-        question_type_id = st.selectbox("题型", [row[1] for row in options[db_con.TABLE_QUESTION_TYPE]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_QUESTION_TYPE] if row[1] == x))
-        knowledge_point_id = st.selectbox("知识点", [row[1] for row in options[db_con.TABLE_KNOWLEDGE_POINT]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_KNOWLEDGE_POINT] if row[1] == x))
-        reason_id = st.selectbox("错误原因", [row[1] for row in options[db_con.TABLE_ERROR_REASON]], format_func=lambda x: next(row[1] for row in options[db_con.TABLE_ERROR_REASON] if row[1] == x))
-
-        # 创建提交按钮
-        submitted = st.form_submit_button("提交", type="primary", use_container_width=True)
-        if submitted:
-            # 验证所有 selectbox 的值是否为空
-            if not semester_id or not unit_id or not lesson_id or not question_type_id or not knowledge_point_id or not reason_id:
-                st.error("请选择所有字段！", icon="⚠️")
-            else:
-                try:
-                    # 将用户选择的数据插入到 err_insight 表中
-                    cursor.execute(f"""
-                        INSERT INTO {db_con.TABLE_ERR_INSIGHT} ({db_con.COLUMN_SEMESTER_ID}, {db_con.COLUMN_UNIT_ID}, {db_con.COLUMN_LESSON_ID}, {db_con.COLUMN_QUESTION_TYPE_ID}, {db_con.COLUMN_KNOWLEDGE_POINT_ID}, {db_con.COLUMN_ERROR_REASON_ID})
+    try:
+        # 将用户选择的数据插入到 err_insight 表中
+        cursor.execute(f"""
+                        INSERT INTO {db_con.TABLE_ERR_INSIGHT} (
+                            {db_con.COLUMN_SEMESTER_ID}, 
+                            {db_con.COLUMN_UNIT_ID}, 
+                            {db_con.COLUMN_LESSON_ID}, 
+                            {db_con.COLUMN_QUESTION_TYPE_ID}, 
+                            {db_con.COLUMN_KNOWLEDGE_POINT_ID}, 
+                            {db_con.COLUMN_ERROR_REASON_ID})
                         VALUES (?, ?, ?, ?, ?, ?)
                     """, (get_option_id(options[db_con.TABLE_SEMESTER], semester_id),
                           get_option_id(options[db_con.TABLE_UNIT], unit_id),
@@ -178,16 +164,14 @@ def save_error_info():
                           get_option_id(options[db_con.TABLE_KNOWLEDGE_POINT], knowledge_point_id),
                           get_option_id(options[db_con.TABLE_ERROR_REASON], reason_id)))
 
-                    conn.commit()
-                    st.success("数据已添加！", icon="✔️")
-                except Exception as e:
-                    st.error(f"数据保存失败: {e}", icon="🚨")
-                    conn.rollback()
-                finally:
-                    # 确保在任何情况下都关闭数据库连接
-                    conn.close()
-                    time.sleep(0.8)
-                    st.rerun(scope="fragment")
+        conn.commit()
+        st.success("数据已添加！", icon="✔️")
+    except Exception as e:
+        st.error(f"数据保存失败: {e}", icon="🚨")
+        conn.rollback()
+    finally:
+        # 确保在任何情况下都关闭数据库连接
+        conn.close()
 
 # 获取选项的 ID
 def get_option_id(options, selected_value):
